@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import androidx.core.content.ContextCompat
-import com.madrat.ovalexample.R
 import android.view.Gravity
 import android.view.View
 import com.madrat.ovalexample.databinding.ActivityMainBinding
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view: View = binding.root
         setContentView(view)
-        val foregroundDrawable = ContextCompat.getDrawable(
+        val backgroundImage = ContextCompat.getDrawable(
             this,
             R.drawable.ic_ellipse_21__1_
         )
@@ -30,15 +29,22 @@ class MainActivity : AppCompatActivity() {
             R.dimen.elevation,
             Gravity.BOTTOM
         )
-        binding.imageView.background = foregroundDrawable
+        binding.backgroundImage.background = backgroundImage
         val isClickable = true
         if (isClickable) {
-            binding.imageView.setOnClickListener {
-                finish()
+            binding.foregroundImage.setOnClickListener {
+                //finish()
             }
         } else {
-            binding.imageView.setOnClickListener(null)
+            binding.foregroundImage.setOnClickListener(null)
         }
+        binding.foregroundImage.background = ContextCompat.getDrawable(
+            this,
+            R.drawable.ic_ellipse_82
+        )
+        binding.foregroundImage.foreground = getRippleAnimDrawable(
+            binding.backgroundImage.background
+        )
     }
     private fun getRippleAnimDrawable(
         drawable: Drawable
