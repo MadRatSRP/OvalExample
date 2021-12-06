@@ -1,8 +1,10 @@
 package com.madrat.ovalexample
 
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.RippleDrawable
 import androidx.core.content.ContextCompat
 import com.madrat.ovalexample.R
 import android.view.Gravity
@@ -16,18 +18,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view: View = binding.root
         setContentView(view)
-        
-        /*binding.imageView.setBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                android.R.color.darker_gray
-            )
-        );*/
         val foregroundDrawable = ContextCompat.getDrawable(
             this,
             R.drawable.ic_ellipse_21__1_
         )
-        binding!!.rootLayout.background = ViewUtils.generateBackgroundWithShadow(
+        binding.rootLayout.background = ViewUtils.generateBackgroundWithShadow(
             this,
             R.color.white,
             R.dimen.radius_corner,
@@ -35,6 +30,23 @@ class MainActivity : AppCompatActivity() {
             R.dimen.elevation,
             Gravity.BOTTOM
         )
-        binding?.imageView?.foreground = foregroundDrawable
+        binding.imageView.background = foregroundDrawable
+        val isClickable = true
+        if (isClickable) {
+            binding.imageView.setOnClickListener {
+                finish()
+            }
+        } else {
+            binding.imageView.setOnClickListener(null)
+        }
     }
+    private fun getRippleAnimDrawable(
+        drawable: Drawable
+    ): RippleDrawable = RippleDrawable(
+        ColorStateList.valueOf(
+            this.getColor(R.color.white)
+        ),
+        null,
+        drawable
+    )
 }
