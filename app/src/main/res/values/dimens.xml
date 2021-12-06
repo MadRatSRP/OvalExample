@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="radius_corner">7dp</dimen>
+    <dimen name="elevation">10dp</dimen>
+    <dimen name="view_size">250dp</dimen>
+</resources>
