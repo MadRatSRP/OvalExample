@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             this,
             R.drawable.ic_ellipse_82
         )
-        binding.foregroundImage.foreground = getRippleAnimDrawable(
+        binding.rippleImage.foreground = getRippleAnimDrawable(
             binding.backgroundImage.background
         )
     }
