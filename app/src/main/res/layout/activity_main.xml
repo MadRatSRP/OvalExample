@@ -12,7 +12,7 @@
         app:foregroundImage="@drawable/ic_ellipse_82"
         app:isClickable="true"
         android:id="@+id/oval_shadowed_view"
-        android:layout_width="300dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:foregroundGravity="center"
         app:layout_constraintStart_toStartOf="parent"
