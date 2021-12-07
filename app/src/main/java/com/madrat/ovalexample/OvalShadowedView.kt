@@ -5,11 +5,9 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.LayoutInflater
+import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import com.madrat.ovalexample.databinding.CustomViewOvalShadowedViewBinding
 
 class OvalShadowedView: ConstraintLayout {
@@ -80,14 +78,39 @@ class OvalShadowedView: ConstraintLayout {
         defStyleAttr: Int,
         defStyleRes: Int
     ) {
-        val set = ConstraintSet()
-        binding = CustomViewOvalShadowedViewBinding.inflate(LayoutInflater.from(context))
-        addView(binding?.root)
-        /*set.clone(this)
-        set.match(
-            binding?.root,
-            this.parent
-        )*/
+        binding = CustomViewOvalShadowedViewBinding.inflate(
+            LayoutInflater.from(
+                context,
+            ),
+            this,
+            false
+        )
+        this.getDimensions { width, _ ->
+            val set = ConstraintSet()
+            (this.parent as? ConstraintLayout)?.let { parent->
+                parent.addView(
+                    binding?.root,
+                    width,
+                    (width * 1.05).toInt()
+                )
+                set.clone(parent)
+                binding?.root?.id?.let {
+                    set.connect(
+                        it,
+                        ConstraintSet.TOP,
+                        parent.id,
+                        ConstraintSet.TOP,
+                    )
+                    set.connect(
+                        it,
+                        ConstraintSet.TOP,
+                        parent.id,
+                        ConstraintSet.TOP,
+                    )
+                }
+                set.applyTo(parent)
+            }
+        }
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.OvalShadowedView,
@@ -144,4 +167,13 @@ class OvalShadowedView: ConstraintLayout {
         null,
         drawable
     )
+    
+    inline fun View.getDimensions(crossinline onDimensionsReady: (Int, Int) -> Unit) {
+        lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
+        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+            onDimensionsReady(width, height)
+        }
+        viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+    }
 }
