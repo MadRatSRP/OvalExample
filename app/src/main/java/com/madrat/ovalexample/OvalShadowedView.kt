@@ -7,7 +7,7 @@ import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.updateLayoutParams
 import com.madrat.ovalexample.databinding.CustomViewOvalShadowedViewBinding
 
 class OvalShadowedView: ConstraintLayout {
@@ -85,31 +85,12 @@ class OvalShadowedView: ConstraintLayout {
             this,
             false
         )
-        this.getDimensions { width, _ ->
-            val set = ConstraintSet()
-            (this.parent as? ConstraintLayout)?.let { parent->
-                parent.addView(
-                    binding?.root,
-                    width,
-                    (width * 1.05).toInt()
-                )
-                set.clone(parent)
-                binding?.root?.id?.let {
-                    set.connect(
-                        it,
-                        ConstraintSet.TOP,
-                        parent.id,
-                        ConstraintSet.TOP,
-                    )
-                    set.connect(
-                        it,
-                        ConstraintSet.TOP,
-                        parent.id,
-                        ConstraintSet.TOP,
-                    )
-                }
-                set.applyTo(parent)
-            }
+        this.getDimensions { width, height ->
+            addView(
+                binding?.root,
+                width,
+                (width * 1.05).toInt()
+            )
         }
         context.theme.obtainStyledAttributes(
             attrs,
