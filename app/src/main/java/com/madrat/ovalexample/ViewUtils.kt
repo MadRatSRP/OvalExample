@@ -3,15 +3,14 @@ package com.madrat.ovalexample
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.Rect
-import androidx.annotation.ColorRes
-import androidx.annotation.DimenRes
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
-import android.view.Gravity
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
-import android.graphics.drawable.LayerDrawable
-import android.view.View
+import android.view.Gravity
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
+import androidx.core.content.ContextCompat
 
 object ViewUtils {
     @JvmStatic
@@ -23,7 +22,7 @@ object ViewUtils {
         @DimenRes elevation: Int,
         shadowGravity: Int
     ): Drawable {
-        //val cornerRadiusValue = context.resources.getDimension(cornerRadius)
+        val cornerRadiusValue = context.resources.getDimension(cornerRadius)
         val elevationValue = context.resources.getDimension(elevation)
             .toInt()
         val shadowColorValue = ContextCompat.getColor(
@@ -34,64 +33,71 @@ object ViewUtils {
             context,
             backgroundColor
         )
-        
         Paint().apply {
             style = Paint.Style.FILL
-            setShadowLayer(elevationValue.toFloat(), 0f, 0f, 0)
+            setShadowLayer(
+                cornerRadiusValue,
+                0f,
+                0f,
+                0
+            )
         }
-        
         val shapeDrawablePadding = Rect().apply {
             left = elevationValue
             right = elevationValue
         }
-        
-        val yCoordinate: Int
-        when (shadowGravity) {
+        val yCoordinate: Int = when (shadowGravity) {
             Gravity.CENTER -> {
-                shapeDrawablePadding.top = elevationValue
-                shapeDrawablePadding.bottom = elevationValue
-                yCoordinate = 0
+                with(shapeDrawablePadding) {
+                    top = elevationValue
+                    bottom = elevationValue
+                }
+                0
             }
             Gravity.TOP -> {
-                shapeDrawablePadding.top = elevationValue * 2
-                shapeDrawablePadding.bottom = elevationValue
-                yCoordinate = -1 * elevationValue / 3
+                with(shapeDrawablePadding) {
+                    top = elevationValue * 2
+                    bottom = elevationValue
+                }
+                -1 * elevationValue / 3
             }
             Gravity.BOTTOM -> {
-                shapeDrawablePadding.top = (elevationValue / 4).toInt()
-                shapeDrawablePadding.bottom = (elevationValue / 4).toInt()
-                yCoordinate = (elevationValue / 3).toInt()
+                with(shapeDrawablePadding) {
+                    top = elevationValue
+                    bottom = elevationValue * 2
+                }
+                elevationValue / 3
             }
             else -> {
-                shapeDrawablePadding.top = elevationValue
-                shapeDrawablePadding.bottom = elevationValue * 2
-                yCoordinate = elevationValue / 3
+                with(shapeDrawablePadding) {
+                    top = elevationValue
+                    bottom = elevationValue * 2
+                }
+                elevationValue / 3
             }
         }
-        
-        val shapeDrawable = ShapeDrawable()
-        shapeDrawable.setPadding(shapeDrawablePadding)
-        
-        shapeDrawable.paint.color = backgroundColorValue
-        shapeDrawable.paint.setShadowLayer(
-            eleva / 3f,
-            0f,
-            yCoordinate.toFloat(),
-            shadowColorValue
-        )
-        
-        shapeDrawable.paint
-        
-        shapeDrawable.shape = OvalShape()
-        
-        val drawable = LayerDrawable(arrayOf<Drawable>(shapeDrawable))
-        drawable.setLayerInset(
-            0,
-            elevationValue,
-            elevationValue * 2,
-            elevationValue,
-            elevationValue * 2
-        )
-        return drawable
+        val shapeDrawable = ShapeDrawable().apply {
+            setPadding(shapeDrawablePadding)
+            with(paint) {
+                color = backgroundColorValue
+                setShadowLayer(
+                    cornerRadiusValue / 3f,
+                    0f,
+                    yCoordinate.toFloat(),
+                    shadowColorValue
+                )
+                this
+            }
+            shape = OvalShape()
+        }
+        return LayerDrawable(arrayOf<Drawable>(shapeDrawable)).apply {
+            setLayerInset(
+                0,
+                (elevationValue * 1.5).toInt(),
+                elevationValue,
+                (elevationValue * 1.5).toInt(),
+                elevationValue * 2
+            )
+        }
     }
 }

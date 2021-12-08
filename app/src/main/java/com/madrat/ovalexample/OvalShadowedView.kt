@@ -66,29 +66,10 @@ class OvalShadowedView: ConstraintLayout {
             false
         )
         this.getDimensions { width, _ ->
-            /*addView(
-                binding?.root,
-                width,
-                TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    (width / 2.375).toFloat(),
-                    resources.displayMetrics
-                ).roundToInt()
-            )*/
-            /*(binding?.root?.layoutParams as? ConstraintLayout.LayoutParams)?.let {
-                it.dimensionRatio = "1:1"
-                binding?.root?.layoutParams = it
-            }
-         */
-            
             addView(
                 binding?.root,
                 width,
-                TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    (width / 2.375).toFloat(),
-                    resources.displayMetrics
-                ).roundToInt()
+                width
             )
             binding?.root?.background = ViewUtils.generateBackgroundWithShadow(
                 this@OvalShadowedView.context,
@@ -98,9 +79,19 @@ class OvalShadowedView: ConstraintLayout {
                 R.dimen.elevation,
                 Gravity.BOTTOM
             )
-            
-            //addView(binding?.root)
         }
+        initializeViews(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
+    
+    fun initializeViews(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.OvalShadowedView,
@@ -118,11 +109,10 @@ class OvalShadowedView: ConstraintLayout {
                     R.styleable.OvalShadowedView_isClickable,
                     false
                 )
-                binding?.let {
-                    with(it) {
-                        backgroundImage.background = backgroundImageDrawable
-                        foregroundImage.background = foregroundImageDrawable
-                        //foregroundImage.visibility = INVISIBLE
+                binding?.let { binding->
+                    with(binding) {
+                        backgroundImageDrawable?.let { backgroundImage.background = it }
+                        foregroundImageDrawable?.let { foregroundImage.background = it }
                         rippleImage.foreground = if (isViewClickable) {
                             getRippleAnimDrawable(
                                 backgroundImage.background
