@@ -66,6 +66,21 @@ class OvalShadowedView: ConstraintLayout {
             false
         )
         this.getDimensions { width, _ ->
+            /*addView(
+                binding?.root,
+                width,
+                TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    (width / 2.375).toFloat(),
+                    resources.displayMetrics
+                ).roundToInt()
+            )*/
+            /*(binding?.root?.layoutParams as? ConstraintLayout.LayoutParams)?.let {
+                it.dimensionRatio = "1:1"
+                binding?.root?.layoutParams = it
+            }
+         */
+            
             addView(
                 binding?.root,
                 width,
@@ -75,6 +90,16 @@ class OvalShadowedView: ConstraintLayout {
                     resources.displayMetrics
                 ).roundToInt()
             )
+            binding?.root?.background = ViewUtils.generateBackgroundWithShadow(
+                this@OvalShadowedView.context,
+                R.color.white,
+                R.dimen.radius_corner,
+                R.color.black_40,
+                R.dimen.elevation,
+                Gravity.BOTTOM
+            )
+            
+            //addView(binding?.root)
         }
         context.theme.obtainStyledAttributes(
             attrs,
@@ -95,16 +120,9 @@ class OvalShadowedView: ConstraintLayout {
                 )
                 binding?.let {
                     with(it) {
-                        root.background = ViewUtils.generateBackgroundWithShadow(
-                            this@OvalShadowedView.context,
-                            R.color.white,
-                            R.dimen.radius_corner,
-                            R.color.black_40,
-                            R.dimen.elevation,
-                            Gravity.BOTTOM
-                        )
                         backgroundImage.background = backgroundImageDrawable
                         foregroundImage.background = foregroundImageDrawable
+                        //foregroundImage.visibility = INVISIBLE
                         rippleImage.foreground = if (isViewClickable) {
                             getRippleAnimDrawable(
                                 backgroundImage.background

@@ -23,7 +23,7 @@ object ViewUtils {
         @DimenRes elevation: Int,
         shadowGravity: Int
     ): Drawable {
-        val cornerRadiusValue = context.resources.getDimension(cornerRadius)
+        //val cornerRadiusValue = context.resources.getDimension(cornerRadius)
         val elevationValue = context.resources.getDimension(elevation)
             .toInt()
         val shadowColorValue = ContextCompat.getColor(
@@ -37,12 +37,12 @@ object ViewUtils {
         
         Paint().apply {
             style = Paint.Style.FILL
-            setShadowLayer(cornerRadiusValue, 0f, 0f, 0)
+            setShadowLayer(elevationValue.toFloat(), 0f, 0f, 0)
         }
         
         val shapeDrawablePadding = Rect().apply {
-            left = elevationValue - 4
-            right = elevationValue - 4
+            left = elevationValue
+            right = elevationValue
         }
         
         val yCoordinate: Int
@@ -58,9 +58,9 @@ object ViewUtils {
                 yCoordinate = -1 * elevationValue / 3
             }
             Gravity.BOTTOM -> {
-                shapeDrawablePadding.top = elevationValue
-                shapeDrawablePadding.bottom = elevationValue * 2
-                yCoordinate = elevationValue / 3
+                shapeDrawablePadding.top = (elevationValue / 4).toInt()
+                shapeDrawablePadding.bottom = (elevationValue / 4).toInt()
+                yCoordinate = (elevationValue / 3).toInt()
             }
             else -> {
                 shapeDrawablePadding.top = elevationValue
@@ -74,7 +74,7 @@ object ViewUtils {
         
         shapeDrawable.paint.color = backgroundColorValue
         shapeDrawable.paint.setShadowLayer(
-            cornerRadiusValue / 3f,
+            eleva / 3f,
             0f,
             yCoordinate.toFloat(),
             shadowColorValue
